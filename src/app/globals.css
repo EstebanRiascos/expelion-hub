@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --border: #e5e5e5;
+  --radius: 12px;
+
+  /* Ambient Lights & Background (Light) */
+  --global-bg-base: linear-gradient(to bottom, #ffffff 0%, #fdfcff 35%, #f5f3ff 75%, #ffffff 100%);
+  --ambient-1: rgba(167, 139, 250, 0.12);
+  --ambient-2: rgba(129, 140, 248, 0.12);
+  --ambient-3: rgba(232, 121, 249, 0.08);
+  --ambient-4: rgba(253, 230, 138, 0.12);
+  --ambient-5: rgba(139, 92, 246, 0.12);
+  
+  --mesh-color: rgba(99, 102, 241, 0.12);
+
+  /* Particles (Light) */
+  --particle-1: rgba(167, 139, 250, 0.4); /* lavender */
+  --particle-2: rgba(196, 181, 253, 0.3); /* translúcido morado */
+  --particle-3: rgba(255, 255, 255, 0.6); /* blanco cálido */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --background: #0a0a0f;
+  --foreground: #f5f5f5;
+  --card: #13131a;
+  --card-foreground: #f5f5f5;
+  --border: #1f1f2e;
+
+  /* Ambient Lights & Background (Dark) */
+  --global-bg-base: linear-gradient(to bottom, #0a0a0f 0%, #0d0a1c 35%, #050508 75%, #0a0a0f 100%);
+  --ambient-1: rgba(124, 58, 237, 0.15);
+  --ambient-2: rgba(79, 70, 229, 0.15);
+  --ambient-3: rgba(147, 51, 234, 0.1);
+  --ambient-4: rgba(30, 58, 138, 0.15);
+  --ambient-5: rgba(109, 40, 217, 0.15);
+  
+  --mesh-color: rgba(99, 102, 241, 0.2);
+
+  /* Particles (Dark) */
+  --particle-1: rgba(139, 92, 246, 0.3); /* violeta */
+  --particle-2: rgba(59, 130, 246, 0.2); /* azul profundo */
+  --particle-3: rgba(255, 255, 255, 0.15); /* blanco tenue */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
+}
+
+html, body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:
+    Inter,
+    system-ui,
+    sans-serif;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+
+  overflow-x: hidden;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: #111827;
+  color: white;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+}
+
+section {
+  scroll-margin-top: 80px;
 }
