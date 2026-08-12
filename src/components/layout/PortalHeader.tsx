@@ -5,18 +5,22 @@ import {
   ChevronDown,
   Sun,
   Moon,
+  LogOut,
 } from "lucide-react";
 
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-
+import { createClient } from "@/lib/supabase/client";
+import { usePortalData } from "@/components/providers/PortalProvider";
 
 export default function PortalHeader() {
 
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { user, profile, project } = usePortalData();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -25,6 +29,11 @@ export default function PortalHeader() {
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark");
   };
+
+  const displayName = profile?.full_name || user.email;
+  const initials = displayName.substring(0, 2).toUpperCase();
+  const displayRole = profile?.role === "client" ? "Cliente" : profile?.role === "admin" ? "Administrador" : profile?.role || "Usuario";
+  const projectName = project?.name || "Sin Proyecto";
 
   return (
 
@@ -68,7 +77,7 @@ export default function PortalHeader() {
             dark:text-neutral-400
           "
         >
-          Empresa Demo • Sistema ERP Empresarial
+          {profile?.company_name || "Mi Empresa"} • {projectName}
         </p>
 
 
@@ -90,25 +99,26 @@ export default function PortalHeader() {
 
         {/* Estado */}
 
-        <span
-          className="
-            hidden
-            rounded-full
-            bg-green-100
-            dark:bg-green-900/30
-            px-4
-            py-2
-            text-sm
-            font-medium
-            text-green-700
-            dark:text-green-400
-            md:block
-          "
-        >
-
-          En desarrollo
-
-        </span>
+        {project?.status && (
+          <span
+            className={`
+              hidden
+              rounded-full
+              px-4
+              py-2
+              text-sm
+              font-medium
+              md:block
+              ${
+                project.status === 'En desarrollo' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                project.status === 'Completado' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+              }
+            `}
+          >
+            {project.status}
+          </span>
+        )}
 
 
         {/* Toggle tema */}
@@ -139,9 +149,9 @@ export default function PortalHeader() {
             "
           >
             {isDark ? (
-              <Sun size={18} className="text-amber-400" />
+              <Moon size={18} className="text-violet-400" />
             ) : (
-              <Moon size={18} className="text-violet-600" />
+              <Sun size={18} className="text-amber-500" />
             )}
           </button>
         )}
@@ -189,6 +199,37 @@ export default function PortalHeader() {
         </button>
 
 
+        {/* Logout */}
+        <button
+          onClick={async () => {
+            const supabase = createClient();
+            await supabase.auth.signOut();
+            window.location.href = "/login";
+          }}
+          title="Cerrar sesión"
+          className="
+            relative
+            flex
+            h-10
+            w-10
+            items-center
+            justify-center
+            rounded-xl
+            border
+            border-neutral-200
+            dark:border-neutral-700
+            text-neutral-600
+            dark:text-neutral-300
+            transition-all
+            duration-300
+            hover:bg-red-50
+            dark:hover:bg-red-900/20
+            hover:text-red-600
+            dark:hover:text-red-400
+          "
+        >
+          <LogOut size={18} />
+        </button>
 
 
         {/* Usuario */}
@@ -220,10 +261,11 @@ export default function PortalHeader() {
               bg-violet-600
               font-semibold
               text-white
+              uppercase
             "
           >
 
-            JD
+            {initials}
 
           </div>
 
@@ -240,7 +282,7 @@ export default function PortalHeader() {
                 dark:text-neutral-100
               "
             >
-              Juan Demo
+              {displayName}
             </p>
 
 
@@ -249,9 +291,10 @@ export default function PortalHeader() {
                 text-xs
                 text-neutral-500
                 dark:text-neutral-400
+                capitalize
               "
             >
-              Administrador
+              {displayRole}
             </p>
 
 

@@ -159,6 +159,8 @@ export default function RequirementComments({
               bg-neutral-50/50
               px-5
               py-4
+              text-neutral-900
+              placeholder:text-neutral-400
               outline-none
               transition
               focus:border-violet-500

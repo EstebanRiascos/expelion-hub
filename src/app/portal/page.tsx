@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import { motion } from "framer-motion";
+import { usePortalData } from "@/components/providers/PortalProvider";
 
 
 const activities = [
@@ -32,6 +33,10 @@ const activities = [
 
 export default function PortalDashboard() {
 
+  const { user, profile, project } = usePortalData();
+  const displayName = profile?.company_name || profile?.full_name || user.email.split('@')[0];
+  const progress = project?.progress || 0;
+  const status = project?.status || "Sin definir";
 
   return (
 
@@ -50,7 +55,7 @@ export default function PortalDashboard() {
             dark:text-neutral-100
           "
         >
-          Hola, Empresa Demo 👋
+          Hola, {displayName} 👋
         </h1>
 
 
@@ -84,14 +89,13 @@ export default function PortalDashboard() {
 
         <StatCard
           title="Estado"
-          value="En desarrollo"
+          value={status}
           icon={<Clock3 />}
         />
 
-
         <StatCard
           title="Avance"
-          value="78%"
+          value={`${progress}%`}
           icon={<TrendingUp />}
         />
 
@@ -172,7 +176,7 @@ export default function PortalDashboard() {
                 dark:text-neutral-400
               "
             >
-              Sistema ERP Empresarial
+              {project?.name}
             </p>
 
 
@@ -186,7 +190,7 @@ export default function PortalDashboard() {
               dark:text-violet-400
             "
           >
-            78%
+            {progress}%
           </span>
 
 
@@ -212,7 +216,7 @@ export default function PortalDashboard() {
             }}
 
             animate={{
-              width:"78%",
+              width:`${progress}%`,
             }}
 
             transition={{

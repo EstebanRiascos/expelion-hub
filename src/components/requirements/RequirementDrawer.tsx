@@ -9,8 +9,7 @@ import RequirementFiles from "./RequirementFiles";
 import RequirementComments from "./RequirementComments";
 import RequirementHistory from "./RequirementHistory";
 import { 
-  Requirement, 
-  RequirementFile 
+  Requirement 
 } from "@/types/requirements";
 
 interface RequirementDrawerProps {
@@ -19,7 +18,8 @@ interface RequirementDrawerProps {
   requirement: Requirement | null;
   onAddComment: (message: string) => void;
   onUploadFile: (file: File) => Promise<void>;
-  onRemoveFile: (fileId: number, storagePath?: string) => Promise<void>;
+  onRemoveFile: (fileId: string, storagePath?: string) => Promise<void>;
+  onEdit: () => void;
 }
 
 export default function RequirementDrawer({
@@ -29,6 +29,7 @@ export default function RequirementDrawer({
   onAddComment,
   onUploadFile,
   onRemoveFile,
+  onEdit,
 }: RequirementDrawerProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -120,6 +121,7 @@ export default function RequirementDrawer({
                 priority={requirement.priority}
                 createdAt={requirement.createdAt}
                 createdBy={requirement.createdBy}
+                onEdit={onEdit}
               />
 
               <div className="space-y-6 p-8">

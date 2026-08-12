@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, LockKeyhole, Eye, EyeOff, Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,29 +26,21 @@ export default function LoginPage() {
 
     setLoading(true);
 
-    // TODO: Reemplazar con validación de Supabase Auth
-    // Simulación de carga (Mock validation)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const supabase = createClient();
+    
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    if (email.includes("@")) {
-      // Mock de lógica de roles
-      const userRole: string = "client"; // Puede venir del DB: 'admin', 'client', 'dev'
-      
-      switch (userRole) {
-        case "client":
-          router.push("/portal");
-          break;
-        case "admin":
-          // Redirigir a panel de admin en el futuro
-          router.push("/portal"); 
-          break;
-        default:
-          router.push("/portal");
-      }
-    } else {
-      setError("Credenciales inválidas. Intenta nuevamente.");
+    if (authError) {
+      setError("Credenciales inválidas o hubo un problema de conexión.");
       setLoading(false);
+      return;
     }
+
+    router.push("/portal");
+    router.refresh();
   };
 
   return (

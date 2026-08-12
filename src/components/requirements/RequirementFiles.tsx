@@ -19,7 +19,7 @@ import { createClient } from "@/lib/supabase/client";
 interface RequirementFilesProps {
   files: RequirementFile[];
   onUploadFile: (file: File) => Promise<void>;
-  onRemoveFile: (fileId: number, storagePath?: string) => Promise<void>;
+  onRemoveFile: (fileId: string, storagePath?: string) => Promise<void>;
 }
 
 export default function RequirementFiles({
@@ -178,13 +178,14 @@ function FileCard({
     }
     
     // Obtener la URL pública (asumiendo que el bucket "requirements" es público)
-    const { data } = supabase.storage
-      .from("requirements")
-      .getPublicUrl(file.storage_path);
+    const { data, error } = await supabase.storage
+      .from("project-files")
+      .createSignedUrl(file.storage_path, 60);
       
-    if (data?.publicUrl) {
-      window.open(data.publicUrl, "_blank");
+    if (data?.signedUrl) {
+      window.open(data.signedUrl, "_blank");
     } else {
+      console.error("Error creating signed URL:", error);
       alert("No se pudo obtener la URL de descarga.");
     }
   };

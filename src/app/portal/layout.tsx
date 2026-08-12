@@ -1,5 +1,6 @@
 import Sidebar from "@/components/layout/Sidebar";
 import PortalHeader from "@/components/layout/PortalHeader";
+import { PortalProvider } from "@/components/providers/PortalProvider";
 
 
 export default function PortalLayout({
@@ -9,42 +10,42 @@ export default function PortalLayout({
 }) {
 
   return (
-
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300">
-
-
-      <Sidebar />
+    <PortalProvider>
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 transition-colors duration-300">
 
 
-      <div
-        className="
-          lg:pl-72
-        "
-      >
+        <Sidebar />
 
 
-        <PortalHeader />
-
-
-        <main
+        <div
           className="
-            px-4
-            py-6
-            sm:px-6
-            lg:px-8
+            lg:pl-72
           "
         >
 
-          {children}
 
-        </main>
+          <PortalHeader />
+
+
+          <main
+            className="
+              px-4
+              py-6
+              sm:px-6
+              lg:px-8
+            "
+          >
+
+            {children}
+
+          </main>
+
+
+        </div>
 
 
       </div>
-
-
-    </div>
-
+    </PortalProvider>
   );
 
 }

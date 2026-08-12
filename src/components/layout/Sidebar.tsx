@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   ClipboardList,
 } from "lucide-react";
+import { usePortalData } from "@/components/providers/PortalProvider";
 
 const menu = [
   {
@@ -24,6 +25,7 @@ const menu = [
 export default function Sidebar() {
 
   const pathname = usePathname();
+  const { project } = usePortalData();
 
   return (
 
@@ -165,7 +167,7 @@ export default function Sidebar() {
             dark:text-neutral-400
           "
         >
-          Sistema ERP Empresarial
+          {project?.name || "Sin Proyecto asignado"}
         </p>
 
       </div>

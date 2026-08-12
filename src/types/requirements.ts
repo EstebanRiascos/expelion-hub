@@ -1,5 +1,5 @@
 export interface RequirementFile {
-  id: number;
+  id: string;
   name: string;
   type: "pdf" | "excel" | "image" | "zip" | "other" | string;
   size: string;
@@ -9,7 +9,7 @@ export interface RequirementFile {
 }
 
 export interface RequirementComment {
-  id: number;
+  id: string;
   author: string;
   company: boolean;
   message: string;
@@ -17,7 +17,7 @@ export interface RequirementComment {
 }
 
 export interface RequirementHistoryItem {
-  id: number;
+  id: string;
   title: string;
   description: string;
   date: string;
@@ -25,7 +25,7 @@ export interface RequirementHistoryItem {
 }
 
 export interface Requirement {
-  id: number;
+  id: string;
   title: string;
   description: string;
   status: string;
