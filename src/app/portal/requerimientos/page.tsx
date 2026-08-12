@@ -439,6 +439,11 @@ export default function RequirementsPage() {
 
     if (dbError) {
       console.error("DB Insert failed", dbError);
+      if (storageData?.path) {
+        await supabase.storage.from('project-files').remove([storageData.path]);
+      }
+      alert("Error al registrar el archivo. Inténtalo de nuevo.");
+      return;
     }
 
     // 3. Insert into History (requirement_history)
@@ -508,16 +513,27 @@ export default function RequirementsPage() {
 
     // 1. Delete from Storage
     if (storagePath) {
-      await supabase.storage
+      const { error: storageError } = await supabase.storage
         .from('project-files')
         .remove([storagePath]);
+        
+      if (storageError) {
+        console.error("Storage remove error:", storageError);
+        // Continuamos para intentar borrar de BD incluso si falla Storage (podría estar ya borrado físicamente)
+      }
     }
 
     // 2. Delete from DB
-    await supabase
+    const { error: deleteError } = await supabase
       .from('requirement_files')
       .delete()
       .eq('id', fileId);
+
+    if (deleteError) {
+      console.error("DB delete error:", deleteError);
+      alert("Error al eliminar el registro del archivo en la base de datos.");
+      return;
+    }
 
     // 3. Insert history
     const { data: historyData } = await supabase
